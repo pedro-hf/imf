@@ -8,7 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
+<!--<link rel="stylesheet" type="text/css" href="/static/dashboard.css">-->
 </head>
 
 <body>
@@ -25,6 +25,16 @@
 
   <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
     <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+       <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>
+          <ul class="dropdown-menu bg-dark">
+            <li><a class="nav-link" href="#">Action</a></li>
+            <li><a class="nav-link" href="#">Another action</a></li>
+            <li><a class="nav-link" href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a class="nav-link" href="#">Separated link</a></li>
+          </ul>
+       </li>
       <li class="nav-item">
         <a class="nav-link" href="https://github.com/pedro-hf">GitHub</a>
       </li>
@@ -60,17 +70,36 @@
             <h4 id="tag-line" class="text-muted">Some interesting data</h4>
 
         </div>
-
         <!-----------------charts-------------------->
         <div id="charts" class="container mt-3 text-center">
 
             <!--top two charts------------>
             <div class="row">
-                <div class="col-6">
+                <div class="col-5">
                     <div id="plot1"></div>
                 </div>
+                    <div class="col-1 border-right border-left">
+                        <!-- dropdown menu for filter -->
+                        <div class="dropdown">
+                          <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Dropdown button
+                          </button>
+                            <form action="/dashboard.html" method="post">
+                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                {% for v in var %}
+                                <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" name="{{v}}" id="{{v}}" value="{{v}}" >
+                                  <label class="form-check-label" for="{{v}}">Button</label>
+                                </div>
+                                {% endfor %}
+                                  <input type="submit" value="Submit">
+                              </div>
+                            </form>
+                        </div>
+                    </div>
                 <div class="col-6">
-                    <div id="plot2"></div>
+                    <div id="plot2"></div></div>
+                    </div>
                 </div>
             </div>
 

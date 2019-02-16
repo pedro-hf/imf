@@ -1,5 +1,5 @@
 import requests
-
+import pandas as pd
 
 class IMFClient:
     imf_url = 'http://dataservices.imf.org/REST/SDMX_JSON.svc/'
@@ -18,4 +18,14 @@ class IMFClient:
         r = requests.get(url)
         d = r.json()
         data_json = d['CompactData']['DataSet']['Series']['Obs']
-        return data_json
+        return pd.DataFrame().from_dict(data_json)
+
+    def get_dataflow_codes(self, d='IFS'):
+        url = self.imf_url + '/DataStructure/' + d
+        r = requests.get(url)
+        d = r.json()
+        codes = pd.DataFrame().from_dict(d['Structure']['CodeLists']['CodeList'][3]['Code'])
+        codes['Description'] = codes.Description.apply(lambda dct: dct['#text'])
+        codes.rename(columns={'@value': 'code'}, inplace=True)
+        codes.set_index('code', inplace=True)
+        return codes

@@ -4,13 +4,12 @@ from datetime import datetime
 
 
 
-def parse_imf_api_data(json_data):
+def parse_imf_api_data(df):
     """
     It takes the respond from the IMF API and prepares it for javaScript plotly
-    :param json_data: data in jason format from the IMF API
+    :param df: data as pd.DataFrame from the IMF API
     :return: figure dictionary to pass to the html page.
     """
-    df = pd.DataFrame().from_dict(json_data)
     df.rename(columns={'@OBS_VALUE': 'value', '@TIME_PERIOD': 'time_period'}, inplace=True)
     df['date'] = df.time_period.apply(lambda s: datetime.strptime(s, '%Y-%m'))
 
