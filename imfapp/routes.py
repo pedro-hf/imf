@@ -16,11 +16,12 @@ def dashboard():
         figures = parse_imf_api_data(data)
         var = [1, 2, 3]
         figures_json = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
-        return render_template('dashboard.html', figuresJSON=figures_json, var=var)
+        return render_template('dashboard.html', figuresJSON=figures_json, var=var, answer="Nothing")
     elif request.method == 'POST':
         client = IMFClient()
+        answer = request.form
         data = client.get_imf_data('GE', 'FILR_PA', '1950', '2016')
         figures = parse_imf_api_data(data)
         var = [1, 2, 3]
         figures_json = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
-        return render_template('dashboard.html', figuresJSON=figures_json, var=var)
+        return render_template('dashboard.html', figuresJSON=figures_json, var=var, answer=answer)
