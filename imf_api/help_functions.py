@@ -32,5 +32,5 @@ def parse_imf_api_data(df):
                             'dtick': 25},
                   'yaxis': {'title': 'Hectares'}}
 
-    figures = [dict(data=graph_one, layout=layout_one)]
+    figures = dict(data=graph_one, layout=layout_one)
     return figures

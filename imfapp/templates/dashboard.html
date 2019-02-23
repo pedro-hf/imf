@@ -25,16 +25,6 @@
 
   <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
     <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-       <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>
-          <ul class="dropdown-menu bg-dark">
-            <li><a class="nav-link" href="#">Action</a></li>
-            <li><a class="nav-link" href="#">Another action</a></li>
-            <li><a class="nav-link" href="#">Something else here</a></li>
-            <li class="divider"></li>
-            <li><a class="nav-link" href="#">Separated link</a></li>
-          </ul>
-       </li>
       <li class="nav-item">
         <a class="nav-link" href="https://github.com/pedro-hf">GitHub</a>
       </li>
@@ -75,33 +65,34 @@
 
             <!--top two charts------------>
             <div class="row">
+                <div class="col-1 border-right border-left">
+                    <!-- dropdown menu for filter -->
+                    <div class="dropdown">
+                      <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Countries
+                      </button>
+                        <form action="/dashboard.html" method="post">
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            {% for v in var %}
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" name="{{v[0]}}" id="{{v[0]}}" value="{{v[1]}}" >
+                              <label class="form-check-label" for="{{v[0]}}">{{v[1]}}</label>
+                            </div>
+                            {% endfor %}
+                              <input type="submit" value="Submit">
+                          </div>
+                        </form>
+                    </div>
+                </div>
                 <div class="col-5">
                     <div id="plot1"></div>
                 </div>
-                    <div class="col-1 border-right border-left">
-                        <!-- dropdown menu for filter -->
-                        <div class="dropdown">
-                          <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Dropdown button
-                          </button>
-                            <form action="/dashboard.html" method="post">
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                {% for v in var %}
-                                <div class="form-check">
-                                  <input class="form-check-input" type="checkbox" name="{{v}}" id="{{v}}" value="{{v}}" >
-                                  <label class="form-check-label" for="{{v}}">Button {{answer}}</label>
-                                </div>
-                                {% endfor %}
-                                  <input type="submit" value="Submit">
-                              </div>
-                            </form>
-                        </div>
-                    </div>
                 <div class="col-6">
-                    <div id="plot2"></div></div>
-                    </div>
+                    <div id="plot2"></div>
                 </div>
             </div>
+        </div>
+    </div>
 
             <!--bottom two charts--------->
             <div class="row mb-6">
@@ -141,6 +132,7 @@
     <script type="text/javascript">
         var figures = {{figuresJSON | safe}} ;
         Plotly.plot("plot1", figures[0].data, figures[0].layout || {});
+        Plotly.plot("plot2", figures[1].data, figures[1].layout || {});
     </script>
 
 </footer>

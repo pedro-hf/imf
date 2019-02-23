@@ -11,17 +11,18 @@ import plotly
 @app.route('/dashboard.html', methods=['GET', 'POST'])
 def dashboard():
     if request.method == 'GET':
-        client = IMFClient()
-        data = client.get_imf_data('US', 'FILR_PA', '1950', '2016')
-        figures = parse_imf_api_data(data)
-        var = [1, 2, 3]
-        figures_json = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
-        return render_template('dashboard.html', figuresJSON=figures_json, var=var, answer="Nothing")
+        var = [['US', 'United States'], ['GE', 'Germany']]
+        figures_json = json.dumps([], cls=plotly.utils.PlotlyJSONEncoder)
+        return render_template('dashboard.html', figuresJSON=figures_json, var=var)
     elif request.method == 'POST':
         client = IMFClient()
         answer = request.form
-        data = client.get_imf_data('GE', 'FILR_PA', '1950', '2016')
-        figures = parse_imf_api_data(data)
-        var = [1, 2, 3]
+        figures = []
+        print(answer)
+        for selected_country in answer:
+            print(selected_country)
+            data = client.get_imf_data(selected_country, 'FILR_PA', '1950', '2016')
+            figures.append(parse_imf_api_data(data))
+        var = [['US', 'United States'], ['GE', 'Germany']]
         figures_json = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
-        return render_template('dashboard.html', figuresJSON=figures_json, var=var, answer=answer)
+        return render_template('dashboard.html', figuresJSON=figures_json, var=var)
