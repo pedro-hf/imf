@@ -21,7 +21,7 @@ def dashboard():
         print(answer)
         for selected_country in answer:
             print(selected_country)
-            data = client.get_imf_data(selected_country, 'FILR_PA', '1950', '2016')
+            data = client.get_data('IFS', 'M', selected_country, 'FILR_PA', '1950', '2016')
             figures.append(parse_imf_api_data(data))
         var = [['US', 'United States'], ['GE', 'Germany']]
         figures_json = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)

@@ -10,8 +10,7 @@ def parse_imf_api_data(df):
     :param df: data as pd.DataFrame from the IMF API
     :return: figure dictionary to pass to the html page.
     """
-    df.rename(columns={'@OBS_VALUE': 'value', '@TIME_PERIOD': 'time_period'}, inplace=True)
-    df['date'] = df.time_period.apply(lambda s: datetime.strptime(s, '%Y-%m'))
+    df['date'] = df.time.apply(lambda s: datetime.strptime(s, '%Y-%m'))
 
     graph_one = []
     x_val = df.date.tolist()
