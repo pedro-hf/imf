@@ -67,20 +67,31 @@
             <div class="row">
                 <div class="col">
                     <!-- dropdown menu for filter -->
+                    <form action="/dashboard.html" method="post">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Countries<span class="caret"></span></button>
-                        <form action="/dashboard.html" method="post">
                             <ul class="dropdown-menu scrollable-menu" role="menu">
-                                {% for v in var %}
+                                {% for c in countries %}
                                 <div class="form-check">
-                                  <input class="form-check-input" type="checkbox" name="{{v[0]}}" id="{{v[0]}}" value="{{v[1]}}" >
-                                  <label class="form-check-label" for="{{v[0]}}">{{v[1]}}</label>
+                                  <input class="form-check-input" type="checkbox" name="country_{{c[0]}}" id="{{c[0]}}" value="{{c[1]}}" >
+                                  <label class="form-check-label" for="{{c[0]}}">{{c[1]}}</label>
                                 </div>
                                 {% endfor %}
                             </ul>
-                            <input type="submit" value="Plot">
-                        </form>
+                     </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Indicators<span class="caret"></span></button>
+                            <ul class="dropdown-menu scrollable-menu" role="menu">
+                                {% for ind in indicators %}
+                                <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" name="ind_{{ind[0]}}" id="{{ind[0]}}" value="{{ind[1]}}" >
+                                  <label class="form-check-label" for="{{ind[0]}}">{{ind[1]}}</label>
+                                </div>
+                                {% endfor %}
+                            </ul>
                     </div>
+                    <input type="submit" value="Plot">
+                    </form>
                     <div id="plot1"></div>
                 </div>
                 <div class="col">

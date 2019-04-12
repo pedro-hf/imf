@@ -37,6 +37,7 @@ class IMFClient:
         :param end_date: string, last year to extract data from.
         :return: json file with queried data
         """
+
         try:
             url = self.imf_url + 'CompactData/{}/' \
                                  '{}.{}.{}.?startPeriod={}&endPeriod={}'.format(dataflow, frequency, country,
@@ -47,8 +48,10 @@ class IMFClient:
             data = pd.DataFrame().from_dict(data_json)
             data.rename({'@OBS_VALUE': 'value', '@TIME_PERIOD': 'time'}, axis=1, inplace=True)
             return data
+
         except KeyError:
             print('The data is not available')
+            print(r)
             return pd.DataFrame(columns=['value', 'time'])
 
     def get_countries(self, dataflow):
