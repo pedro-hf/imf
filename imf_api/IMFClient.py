@@ -3,6 +3,8 @@ import pandas as pd
 
 
 class IMFClient:
+    """ Client designed to query the JSON REST API from the IMF """
+
     imf_url = 'http://dataservices.imf.org/REST/SDMX_JSON.svc/'
 
     def __repr__(self):
@@ -12,8 +14,9 @@ class IMFClient:
     def __get_dataflow_codes(self, dataflow, code_list):
         """
         Method that returns the indicator codes for a specific indicator.
-        :param d: dataflow code
-        :return:
+        :param dataflow: string, dataflow (e.g. IFS)
+        :param code_list: string, name of the code list to extract values (e.g. CL_AREA_IFS)
+        :return: codes: dataframe, dataframe containing the codes and description of codes.
         """
         url = self.imf_url + '/DataStructure/' + dataflow
         r = requests.get(url)
