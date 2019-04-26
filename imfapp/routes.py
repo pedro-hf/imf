@@ -1,6 +1,6 @@
 from imfapp import app
 from imf_api.IMFClient import IMFClient
-from flask import render_template
+from flask import render_template, redirect
 from flask import request
 from imf_api.help_functions import parse_imf_api_data, create_go, create_figure, create_layout
 import json
@@ -15,6 +15,14 @@ def dashboard():
     dataflows = client.get_dataflows()
     dataflows = dataflows['dataflowID'].values
     return render_template('dataflow_index.html', dataflows=dataflows)
+
+
+@app.route('/select.html', methods=['POST'])
+def redirect_to_dataflow():
+    answer = request.form['dataflow']
+    print(answer)
+    route = '/dashboard/{}.html'.format(answer)
+    return redirect(route)
 
 
 @app.route('/dashboard/<dataflow>.html', methods=['GET', 'POST'])
