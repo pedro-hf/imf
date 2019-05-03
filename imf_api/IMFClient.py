@@ -50,12 +50,15 @@ class IMFClient:
             data_json = d['CompactData']['DataSet']['Series']['Obs']
             data = pd.DataFrame().from_dict(data_json)
             data.rename({'@OBS_VALUE': 'value', '@TIME_PERIOD': 'time'}, axis=1, inplace=True)
-            return data
+            return data, 'OK'
 
         except KeyError:
             print('The data is not available')
-            print(r)
-            return pd.DataFrame(columns=['value', 'time'])
+            return pd.DataFrame(columns=['value', 'time']), 'Data not available'
+
+        except TypeError:
+            print('The data is not available')
+            return pd.DataFrame(columns=['value', 'time']), 'Data has other format'
 
     def get_countries(self, dataflow):
         """Return a dataframe with the code value and the name of the areas, countries"""

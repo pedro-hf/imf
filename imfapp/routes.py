@@ -7,13 +7,12 @@ import json
 import plotly
 
 
-
 @app.route('/')
 @app.route('/dashboard.html')
 def dashboard():
     client = IMFClient()
     dataflows = client.get_dataflows()
-    dataflows = dataflows['dataflowID'].values
+    dataflows = list(zip(dataflows['dataflowID'], dataflows['description']))
     return render_template('dataflow_index.html', dataflows=dataflows)
 
 
@@ -27,20 +26,19 @@ def redirect_to_dataflow():
 
 @app.route('/dashboard/<dataflow>.html', methods=['GET', 'POST'])
 def dataflow_dashboard(dataflow):
+    client = IMFClient()
+    dataflow_description = client.get_dataflows().set_index('dataflowID').loc[dataflow, 'description']
+    countries = client.get_countries(dataflow).values
+    indicators = client.get_indicators(dataflow).values
+    message_board = []
+
     if request.method == 'GET':
-        client = IMFClient()
-        countries = client.get_countries(dataflow).values
-        indicators = client.get_indicators(dataflow).values
         figures_json = json.dumps([], cls=plotly.utils.PlotlyJSONEncoder)
-        return render_template('dashboard.html', dataflow=dataflow,
-                               figuresJSON=figures_json, countries=countries, indicators=indicators)
 
     elif request.method == 'POST':
-        client = IMFClient()
         answer = request.form
         figures = []
         graph_objects = []
-
         plot_countries = []
         for item in answer:
             [type, value] = item.split('_', 1)
@@ -50,18 +48,15 @@ def dataflow_dashboard(dataflow):
                 plot_ind = value
 
         for selected_country in plot_countries:
-            print('country = ' + selected_country)
-            print('Indicator = ' + plot_ind)
-            data = client.get_data(dataflow, 'M', selected_country, plot_ind, '1950', '2016')  # 'FILR_PA'
+            data, message = client.get_data(dataflow, 'M', selected_country, plot_ind, '1950', '2016')
             graph_object = create_go(answer['country_' + selected_country], data)
             graph_objects.append(graph_object)
+            message_board.append(selected_country + ' ' + message)
 
-        layout = create_layout(title='FILR_PA', x_label='M', y_label='Something I don\'t know')
+        layout = create_layout(title=dataflow, x_label='M', y_label=plot_ind)
         figure = create_figure(graph_objects, layout)
         figures.append(figure)
-
-        countries = client.get_countries(dataflow).values
-        indicators = client.get_indicators(dataflow).values
         figures_json = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
-        return render_template('dashboard.html', dataflow=dataflow, figuresJSON=figures_json,
-                               countries=countries, indicators=indicators)
+
+    return render_template('dashboard.html', dataflow=dataflow, messages=message_board, title=dataflow_description,
+                           figuresJSON=figures_json, countries=countries, indicators=indicators)
