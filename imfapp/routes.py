@@ -12,7 +12,11 @@ import plotly
 def dashboard():
     client = IMFClient()
     dataflows = client.get_dataflows()
-    dataflows = list(zip(dataflows['dataflowID'], dataflows['description']))
+    dataflows['general_id'] = dataflows.dataflowID.str.split('_').map(lambda l: l[0])
+    dataflows['general_id_description'] = dataflows.description.str.split(',').map(lambda l: l[0])
+    df_general = dataflows[['general_id', 'general_id_description']]
+    df_general.drop_duplicates(inplace=True, subset=['general_id_description'])
+    dataflows = list(zip(df_general['general_id'], df_general['general_id_description']))
     return render_template('dataflow_index.html', dataflows=dataflows)
 
 

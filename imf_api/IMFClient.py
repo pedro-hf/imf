@@ -46,19 +46,21 @@ class IMFClient:
                                  '{}.{}.{}.?startPeriod={}&endPeriod={}'.format(dataflow, frequency, country,
                                                                                 indicator, start_date, end_date)
             r = requests.get(url)
-            d = r.json()
-            data_json = d['CompactData']['DataSet']['Series']['Obs']
-            data = pd.DataFrame().from_dict(data_json)
-            data.rename({'@OBS_VALUE': 'value', '@TIME_PERIOD': 'time'}, axis=1, inplace=True)
-            return data, 'OK'
+            if r.status_code == 200:
+                d = r.json()
+                data_json = d['CompactData']['DataSet']['Series']['Obs']
+                data = pd.DataFrame().from_dict(data_json)
+                data.rename({'@OBS_VALUE': 'value', '@TIME_PERIOD': 'time'}, axis=1, inplace=True)
+                return data, 'data retrieved successfully'
+
+            elif r.status_code == 500:
+                return pd.DataFrame(columns=['value', 'time']), 'returned server error [500]'
 
         except KeyError:
-            print('The data is not available')
-            return pd.DataFrame(columns=['value', 'time']), 'Data not available'
+            return pd.DataFrame(columns=['value', 'time']), 'data not available or in unexpected format'
 
         except TypeError:
-            print('The data is not available')
-            return pd.DataFrame(columns=['value', 'time']), 'Data has other format'
+            return pd.DataFrame(columns=['value', 'time']), 'data probably in unexpected format'
 
     def get_countries(self, dataflow):
         """Return a dataframe with the code value and the name of the areas, countries"""
